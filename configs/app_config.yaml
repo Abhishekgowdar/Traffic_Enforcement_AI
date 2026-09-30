@@ -1,0 +1,65 @@
+# ======================================================================
+# APPLICATION CONFIGURATION
+# ======================================================================
+
+# Application Settings
+app:
+  name: "Traffic Enforcement AI"
+  version: "1.0.0"
+  debug: true
+  environment: "development"  # Options: development, production
+
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true  # Auto-reload on code changes (development only)
+  workers: 1  # Increase for production
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:5173"
+  max_upload_size_mb: 50
+
+# Database Settings
+database:
+  type: "sqlite"  # Options: sqlite, postgresql
+  sqlite:
+    path: "data/traffic_enforcement.db"
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "traffic_enforcement"
+    user: "postgres"
+    password: "your_password"  # Change in production!
+
+# Security
+security:
+  secret_key: "your-secret-key-change-in-production"
+  algorithm: "HS256"
+  access_token_expire_minutes: 30
+
+# File Storage
+storage:
+  upload_dir: "data/uploads"
+  output_dir: "data/outputs"
+  temp_dir: "data/temp"
+  max_file_size_mb: 50
+  allowed_extensions:
+    - "jpg"
+    - "jpeg"
+    - "png"
+    - "mp4"
+    - "avi"
+
+# Processing
+processing:
+  queue_size: 100
+  timeout_seconds: 300
+  save_intermediate_results: true
+  generate_visualizations: true
+
+# Monitoring
+monitoring:
+  enable_metrics: true
+  enable_profiling: false
+  log_requests: true

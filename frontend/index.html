@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traffic Enforcement AI — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css?v=5" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">🚦</div>
+            <div class="brand-text">
+                <h1>Traffic Enforcement <span>AI</span></h1>
+                <p>Automatic Number Plate Recognition &amp; Vehicle Detection</p>
+            </div>
+        </div>
+        <div class="status-pill">
+            <span class="dot" id="statusDot"></span>
+            <span id="statusText">Checking…</span>
+        </div>
+    </header>
+
+    <main class="layout">
+        <!-- LEFT: input -->
+        <section class="panel input-panel">
+            <div class="panel-head">
+                <h2>Upload</h2>
+                <div class="mode-toggle" role="tablist" aria-label="Analysis mode">
+                    <button class="mode-btn active" data-mode="anpr" role="tab">Plate</button>
+                    <button class="mode-btn" data-mode="detect" role="tab">Vehicles</button>
+                </div>
+            </div>
+
+            <div class="dropzone" id="dropzone" tabindex="0">
+                <input type="file" id="fileInput" accept="image/*" multiple hidden />
+                <div class="dz-icon">📤</div>
+                <p class="dz-title">Drop images here</p>
+                <p class="dz-sub">or <span class="link">browse files</span></p>
+                <p class="dz-hint">JPG · PNG · multiple allowed</p>
+            </div>
+
+            <div class="queue" id="queue" hidden>
+                <div class="queue-head">
+                    <span id="queueCount">0 images</span>
+                    <div class="queue-actions">
+                        <button class="link-btn" id="addMoreBtn">+ Add more</button>
+                        <button class="link-btn danger" id="clearQueueBtn">Remove all</button>
+                    </div>
+                </div>
+                <div class="queue-items" id="queueItems"></div>
+            </div>
+
+            <div class="samples">
+                <span class="samples-label">Quick samples</span>
+                <div class="sample-chips" id="sampleChips"></div>
+            </div>
+
+            <div class="action-row">
+                <button class="analyze-btn" id="analyzeBtn" disabled>
+                    <span class="btn-label">Analyze</span>
+                    <span class="spinner" hidden></span>
+                </button>
+                <button class="secondary-btn" id="newBtn" title="Clear everything">↺ Clear / New</button>
+            </div>
+        </section>
+
+        <!-- RIGHT: results -->
+        <section class="panel result-panel">
+            <div class="panel-head">
+                <h2>Results</h2>
+                <div class="result-head-right">
+                    <span class="result-mode" id="resultMode">Plate Recognition</span>
+                    <button class="link-btn" id="clearResultsBtn" hidden>Clear</button>
+                </div>
+            </div>
+
+            <div class="stats" id="stats" hidden>
+                <div class="stat"><span class="stat-num" id="statProcessed">0</span><span class="stat-label">Processed</span></div>
+                <div class="stat"><span class="stat-num accent" id="statFound">0</span><span class="stat-label" id="statFoundLabel">Plates found</span></div>
+                <div class="stat"><span class="stat-num" id="statAvg">—</span><span class="stat-label">Avg confidence</span></div>
+            </div>
+
+            <div class="progress" id="progress" hidden>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <span class="progress-text" id="progressText">Processing…</span>
+            </div>
+
+            <div class="result-empty" id="resultEmpty">
+                <div class="ghost-plate"><span class="ghost-ind">IND</span><span>— — —</span></div>
+                <p>Upload images and press <strong>Analyze</strong> to see recognized plates here.</p>
+            </div>
+
+            <div class="results-list" id="resultsList" hidden></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>Trustworthy Explainable AI · Smart Traffic Enforcement</span>
+        <span id="engineInfo"></span>
+    </footer>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/static/app.js?v=5"></script>
+</body>
+</html>

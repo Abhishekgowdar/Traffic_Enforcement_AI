@@ -1,0 +1,287 @@
+# ======================================================================
+# MODEL CONFIGURATION - Traffic Enforcement AI
+# ======================================================================
+# Optimized for: Intel Core Ultra 7 265U, 32GB RAM, CPU inference
+#
+# To change models: Simply change the "active_model" value
+# No code changes required!
+# ======================================================================
+
+# DETECTION MODELS
+detection:
+  # Active model - Change this to swap detection models
+  active_model: "yolov8s"  # Options: mobilenet, yolov5s, yolov8n, yolov8s, yolov8m
+
+  # Available detection models
+  models:
+    # Lightweight option (if yolov8s is slow)
+    mobilenet:
+      type: "MobileNetSSD"
+      weight_file: "models/detection/mobilenet_ssd.pth"
+      input_size: 300
+      cpu_friendly: true
+      min_ram_gb: 2
+      inference_time_ms: 15
+      confidence_threshold: 0.5
+
+    # YOLOv5 Small (alternative to YOLOv8)
+    yolov5s:
+      type: "YOLOv5"
+      weight_file: "models/detection/yolov5s.pt"
+      input_size: 640
+      cpu_friendly: true
+      min_ram_gb: 4
+      inference_time_ms: 25
+      confidence_threshold: 0.5
+
+    # YOLOv8 Nano (fastest YOLO)
+    yolov8n:
+      type: "YOLOv8"
+      variant: "nano"
+      weight_file: "models/detection/yolov8n.pt"
+      input_size: 640
+      cpu_friendly: true
+      min_ram_gb: 3
+      inference_time_ms: 30
+      confidence_threshold: 0.5
+
+    # YOLOv8 Small (RECOMMENDED for your system)
+    yolov8s:
+      type: "YOLOv8"
+      variant: "small"
+      weight_file: "models/detection/yolov8s.pt"
+      input_size: 640
+      cpu_friendly: true
+      min_ram_gb: 4
+      inference_time_ms: 50
+      confidence_threshold: 0.5
+
+    # YOLOv8 Medium (use if you want higher accuracy)
+    yolov8m:
+      type: "YOLOv8"
+      variant: "medium"
+      weight_file: "models/detection/yolov8m.pt"
+      input_size: 640
+      cpu_friendly: false
+      min_ram_gb: 6
+      inference_time_ms: 100
+      confidence_threshold: 0.5
+
+  # Detection settings
+  settings:
+    max_detections: 100
+    iou_threshold: 0.45
+    agnostic_nms: false
+    classes: [2, 3, 5, 7]  # car, motorcycle, bus, truck
+
+# OCR ENGINES
+ocr:
+  # Active engines - Multiple engines for fusion
+  # Remove engines from this list if they're too slow
+  active_engines: ["easyocr"]  # Only EasyOCR for Python 3.14 (PaddlePaddle not available yet)
+
+  # Available OCR engines
+  engines:
+    # Tesseract (fastest, lowest accuracy)
+    tesseract:
+      type: "Tesseract"
+      cpu_friendly: true
+      min_ram_gb: 1
+      inference_time_ms: 20
+      language: ["eng"]
+      config: "--psm 8 --oem 3"
+
+    # EasyOCR (good balance)
+    easyocr:
+      type: "EasyOCR"
+      cpu_friendly: true
+      min_ram_gb: 2
+      inference_time_ms: 100
+      language: ["en"]
+      gpu_acceleration: false
+      detector: true
+      recognizer: true
+
+    # PaddleOCR (best accuracy)
+    paddleocr:
+      type: "PaddleOCR"
+      cpu_friendly: true
+      min_ram_gb: 2
+      inference_time_ms: 80
+      language: "en"
+      use_angle_cls: false  # Set true if plates are rotated
+      use_gpu: false
+
+    # TrOCR (transformer-based, slowest but most accurate)
+    trocr:
+      type: "TrOCR"
+      model_name: "microsoft/trocr-base-printed"
+      cpu_friendly: false
+      min_ram_gb: 4
+      inference_time_ms: 200
+      gpu_recommended: true
+
+  # OCR Fusion settings
+  fusion:
+    method: "weighted_voting"  # Options: weighted_voting, majority_voting, confidence_max
+    min_confidence: 0.6
+    min_agreement: 0.7  # Minimum agreement between engines
+
+  # Preprocessing
+  preprocessing:
+    resize_height: 64
+    grayscale: true
+    denoise: true
+    sharpen: false
+    adaptive_threshold: true
+
+# TRACKING
+tracking:
+  # Active tracker
+  active_tracker: "bytetrack"  # Options: sort, bytetrack, deepsort
+
+  trackers:
+    # SORT (simplest, fastest)
+    sort:
+      type: "SORT"
+      cpu_friendly: true
+      min_ram_gb: 1
+      max_age: 30
+      min_hits: 3
+      iou_threshold: 0.3
+
+    # ByteTrack (recommended)
+    bytetrack:
+      type: "ByteTrack"
+      cpu_friendly: true
+      min_ram_gb: 2
+      track_thresh: 0.5
+      track_buffer: 30
+      match_thresh: 0.8
+
+    # DeepSORT (most accurate, slower)
+    deepsort:
+      type: "DeepSORT"
+      model_file: "models/tracking/deepsort.pth"
+      cpu_friendly: false
+      min_ram_gb: 4
+      max_age: 70
+      n_init: 3
+      max_iou_distance: 0.7
+
+# FORGERY DETECTION
+forgery:
+  # Active model
+  active_model: "resnet50"  # Options: simple_cnn, resnet50, efficientnet
+
+  models:
+    # Simple CNN (fast)
+    simple_cnn:
+      type: "SimpleCNN"
+      weight_file: "models/forgery/simple_cnn.pth"
+      cpu_friendly: true
+      min_ram_gb: 2
+      confidence_threshold: 0.7
+
+    # ResNet50 (recommended for your system)
+    resnet50:
+      type: "ResNet50"
+      weight_file: "models/forgery/resnet50_forgery.pth"
+      cpu_friendly: true
+      min_ram_gb: 3
+      confidence_threshold: 0.7
+
+    # EfficientNet (best accuracy)
+    efficientnet:
+      type: "EfficientNetB0"
+      weight_file: "models/forgery/efficientnet_forgery.pth"
+      cpu_friendly: false
+      min_ram_gb: 4
+      confidence_threshold: 0.75
+
+# VIOLATION DETECTION
+violation:
+  # Active violation types
+  active_types: ["red_light", "speed", "lane"]
+
+  red_light:
+    enabled: true
+    confidence_threshold: 0.8
+    buffer_frames: 5
+
+  speed:
+    enabled: true
+    speed_limit_kmh: 60
+    calibration_distance_m: 10
+    buffer_frames: 10
+
+  lane:
+    enabled: true
+    confidence_threshold: 0.7
+
+# TRUST ASSESSMENT
+trust:
+  # Trust scoring weights
+  weights:
+    ocr_confidence: 0.25
+    detection_confidence: 0.20
+    tracking_reliability: 0.15
+    violation_confidence: 0.20
+    forgery_score: 0.10
+    attribute_match: 0.10
+
+  # Trust thresholds
+  thresholds:
+    auto_approve: 85      # Auto-approve if trust >= 85
+    human_review: 60      # Human review if 60 <= trust < 85
+    auto_reject: 60       # Auto-reject if trust < 60
+
+# EXPLAINABILITY (XAI)
+explainability:
+  # Active methods
+  methods: ["gradcam", "shap"]
+
+  gradcam:
+    layer_name: "auto"  # Auto-select last conv layer
+    colormap: "jet"
+
+  shap:
+    n_samples: 100
+    feature_names: ["ocr_conf", "det_conf", "track_rel", "viol_conf", "forge_score", "attr_match"]
+
+# VOICE ASSISTANT
+voice:
+  # Speech recognition
+  stt:
+    model: "whisper"
+    model_size: "base"  # Options: tiny, base, small, medium, large
+    language: "en"
+
+  # Text-to-speech
+  tts:
+    model: "coqui"
+    voice: "default"
+    speed: 1.0
+
+# HARDWARE SETTINGS
+hardware:
+  # Device configuration
+  device: "cpu"  # "cuda" if NVIDIA GPU available
+
+  # CPU settings
+  num_threads: 8  # Intel Core Ultra 7 265U has efficient cores
+
+  # Memory
+  batch_size: 1  # Increase if processing multiple images
+  max_memory_gb: 16  # Maximum memory to use
+
+  # Intel optimizations
+  use_mkl: true  # Intel Math Kernel Library
+  use_openmp: true
+
+# LOGGING
+logging:
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/app.log"
+  console: true

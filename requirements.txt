@@ -1,0 +1,76 @@
+# ==========================================
+# Traffic Enforcement AI - Requirements
+# FIXED for Python 3.14 compatibility
+# ==========================================
+
+# Core ML/CV Libraries
+torch>=2.0.0
+torchvision>=0.15.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# Detection Models
+ultralytics>=8.0.0              # YOLOv8
+
+# OCR Engines (Multi-engine fusion)
+easyocr>=1.7.0                  # EasyOCR
+# paddleocr>=2.7.0              # PaddleOCR - Not compatible with Python 3.14 yet
+pytesseract>=0.3.10             # Lightweight backup OCR
+
+# Tracking
+filterpy>=1.4.5                 # Kalman filter for tracking
+scipy>=1.11.0
+
+# XAI (Explainability)
+shap>=0.42.0                    # SHAP explanations
+captum>=0.6.0                   # PyTorch XAI (Grad-CAM)
+
+# Voice Assistant - COMMENTED OUT (Python 3.14 not supported yet)
+# openai-whisper>=20230918        # Uncomment when using Python 3.11/3.12
+# TTS>=0.13.0                     # Uncomment when using Python 3.11/3.12
+# sounddevice>=0.4.6
+# soundfile>=0.12.1
+
+# Backend (FastAPI)
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+pydantic>=2.0.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Database
+sqlalchemy>=2.0.0
+alembic>=1.11.0
+
+# Utilities
+# YAML parser - Choose ONE:
+# pyyaml>=6.0                   # Requires C++ compiler on Python 3.14
+ruamel.yaml>=0.17.0             # Pure Python, works on Python 3.14 ✓
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+colorama>=0.4.6
+rich>=13.5.0                    # Beautiful terminal output
+
+# Image/Video Processing
+imageio>=2.31.0
+scikit-image>=0.21.0
+
+# Data Processing
+pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+httpx>=0.24.0                   # For testing FastAPI
+
+# Development Tools
+black>=23.7.0                   # Code formatter
+flake8>=6.0.0                   # Linter
+ipython>=8.14.0
+jupyter>=1.0.0
+notebook>=7.0.0
